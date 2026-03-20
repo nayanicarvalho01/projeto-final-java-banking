@@ -1,0 +1,55 @@
+server:
+  port: 8086
+spring:
+  threads:
+    virtual:
+      enabled: true
+
+  application:
+    name: transacao
+
+  cloud:
+    function:
+      definition: testConsumer
+
+    stream:
+      bindings:
+        # Original Producer
+        test-out-0:
+          destination: my-topic
+          content-type: application/json
+
+        # Consumer
+        testConsumer-in-0:
+          destination: my-topic
+          group: spring-group
+          content-type: application/json
+          consumer:
+            max-attempts: 5
+            back-off-initial-interval: 5000
+            back-off-max-interval: 30000
+            back-off-multiplier: 2.0
+
+        # Others Producers
+        validas-out-0:
+          destination: transacoes-validas
+          content-type: application/json
+
+        fraudes-out-0:
+          destination: transacoes-fraude
+          content-type: application/json
+
+        dlq-out-0:
+          destination: my-topic-dlq
+          content-type: application/json
+
+      # Todas as configurações do Kafka aqui (sem duplicação)
+      kafka:
+        binder:
+          brokers: localhost:9092  # Broker do Kafka
+
+        bindings:
+          testConsumer-in-0:
+            consumer:
+              enable-dlq: true
+              dlq-name: my-topic-dlq
