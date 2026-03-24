@@ -38,6 +38,9 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    implementation 'org.camunda.bpm:camunda-engine-rest'
+    implementation 'org.camunda.bpm:camunda-external-task-client:7.21.0'
 }
 
 tasks.named('test') {

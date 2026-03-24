@@ -7,9 +7,7 @@ import com.banking.transacao.model.dto.TransacaoResponseDTO;
 import com.banking.transacao.repository.TransacaoRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.time.OffsetDateTime;
-
 
 @Service
 public class TransacaoService {

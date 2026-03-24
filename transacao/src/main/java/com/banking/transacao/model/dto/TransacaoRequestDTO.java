@@ -1,8 +1,11 @@
 package com.banking.transacao.model.dto;
 
+import com.banking.transacao.model.enumerated.Status;
+import com.banking.transacao.model.enumerated.Tipo;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -10,6 +13,13 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 public class TransacaoRequestDTO {
 
-    private String contaId;
-    private BigDecimal valor;
+    String id;
+    String contaId;
+    String cartaoId;
+    BigDecimal valor;
+    String comerciante;
+    String localizacao;
+    Tipo tipoTransacao;
+    Status status;
+    Instant dataHora;
 }
