@@ -8,15 +8,15 @@ public class TransacaoMapper {
 
     public static TransacaoResponseDTO toResponse(Transacao transacao) {
         TransacaoResponseDTO dto = new TransacaoResponseDTO();
-        dto.setId(dto.getId());
-        dto.setCartaoId(dto.getCartaoId());
-        dto.setContaId(dto.getContaId());
-        dto.setValor(dto.getValor());
-        dto.setComerciante(dto.getComerciante());
-        dto.setLocalizacao(dto.getLocalizacao());
-        dto.setTipoTransacao(dto.getTipoTransacao());
-        dto.setStatus(dto.getStatus());
-        dto.setDataHora(dto.getDataHora());
+        dto.setId(transacao.getId());
+        dto.setCartaoId(transacao.getCartaoId());
+        dto.setContaId(transacao.getContaId());
+        dto.setValor(transacao.getValor());
+        dto.setComerciante(transacao.getComerciante());
+        dto.setLocalizacao(transacao.getLocalizacao());
+        dto.setTipoTransacao(transacao.getTipo());
+        dto.setStatus(transacao.getStatus());
+        dto.setDataHora(transacao.getDataHora());
 
         return dto;
     }
@@ -24,7 +24,11 @@ public class TransacaoMapper {
     public static Transacao toTransacao(TransacaoRequestDTO requestDTO){
         Transacao transacao = new Transacao();
         transacao.setContaId(requestDTO.getContaId());
+        transacao.setCartaoId(requestDTO.getCartaoId());
         transacao.setValor(requestDTO.getValor());
+        transacao.setComerciante(requestDTO.getComerciante());
+        transacao.setLocalizacao(requestDTO.getLocalizacao());
+        transacao.setTipo(requestDTO.getTipoTransacao());
         return transacao;
     }
 }

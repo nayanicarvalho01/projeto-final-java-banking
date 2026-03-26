@@ -4,12 +4,11 @@ import com.banking.transacao.mapper.TransacaoMapper;
 import com.banking.transacao.model.Transacao;
 import com.banking.transacao.model.dto.TransacaoRequestDTO;
 import com.banking.transacao.model.dto.TransacaoResponseDTO;
+import com.banking.transacao.model.enumerated.Status;
 import com.banking.transacao.repository.TransacaoRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.OffsetDateTime;
-
 
 @Service
 public class TransacaoService {
@@ -22,7 +21,8 @@ public class TransacaoService {
 
     public TransacaoResponseDTO novaTransacao(TransacaoRequestDTO requestDTO){
         Transacao transacao = TransacaoMapper.toTransacao(requestDTO);
-        transacao.setDataHora(OffsetDateTime.now());
+        transacao.setDataHora(Instant.now());
+        transacao.setStatus(Status.APROVADA);
 
         Transacao salva = repository.save(transacao);
         return TransacaoMapper.toResponse(salva);
