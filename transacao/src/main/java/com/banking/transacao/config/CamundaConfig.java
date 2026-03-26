@@ -3,6 +3,7 @@ package com.banking.transacao.config;
 import org.camunda.bpm.client.ExternalTaskClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class CamundaConfig {
@@ -12,7 +13,12 @@ public class CamundaConfig {
 
         return ExternalTaskClient.create()
                 .baseUrl("http://camunda:8080/engine-rest")
-                .asyncResponseTimeout(1000)
+                .asyncResponseTimeout(10000)
                 .build();
+    }
+
+    @Bean
+    public RestTemplate restTemplate(){
+        return new RestTemplate();
     }
 }
