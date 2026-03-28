@@ -1,8 +1,19 @@
 package com.banking.saldo.config;
 
-import org.springframework.stereotype.Component;
+import org.camunda.bpm.client.ExternalTaskClient;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-@Component
+@Configuration
 public class CamundaConfig {
+    @Bean
+    public ExternalTaskClient externalTaskClient() {
 
+        return ExternalTaskClient.create()
+                .baseUrl("http://localhost:8080/engine-rest")
+                .asyncResponseTimeout(10000)
+                .maxTasks(10)
+                .build();
+    }
 }
+

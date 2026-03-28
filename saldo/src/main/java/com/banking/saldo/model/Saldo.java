@@ -2,6 +2,7 @@ package com.banking.saldo.model;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -12,6 +13,8 @@ import java.time.Instant;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+
+@Document(collection = "saldo")
 public class Saldo {
 
     @Id
@@ -19,7 +22,7 @@ public class Saldo {
 
     private BigDecimal saldoDebito;
 
-    private BigDecimal saldoCredito;
+    private BigDecimal limiteCredito;
 
     private Instant ultimaAtualizacao;
 }

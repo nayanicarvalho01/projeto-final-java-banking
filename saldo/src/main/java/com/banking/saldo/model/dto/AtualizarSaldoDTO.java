@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class AtualizarSaldoDTO {
 
-    @Id
     private String contaId;
 
     private BigDecimal valor;
