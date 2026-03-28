@@ -43,7 +43,7 @@ public class RegistrarTransacao {
                                 "Erro ao registrar transação: " + e.getClass().getSimpleName(),
                                 e.getMessage(),
                                 3,
-                                10000   // 10 segundos entre tentativas
+                                10000
                         );
 
                     }
