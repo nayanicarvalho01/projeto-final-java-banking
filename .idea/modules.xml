@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/notificacao.iml" filepath="$PROJECT_DIR$/.idea/modules/notificacao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/notificacao.main.iml" filepath="$PROJECT_DIR$/.idea/modules/notificacao.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/notificacao.test.iml" filepath="$PROJECT_DIR$/.idea/modules/notificacao.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/saldo.iml" filepath="$PROJECT_DIR$/.idea/modules/saldo.iml" group="saldo" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/transacao.iml" filepath="$PROJECT_DIR$/.idea/modules/transacao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/transacao.main.iml" filepath="$PROJECT_DIR$/.idea/modules/transacao.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/transacao.test.iml" filepath="$PROJECT_DIR$/.idea/modules/transacao.test.iml" />
+    </modules>
+  </component>
+</project>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel target="1.6">
+      <module name="notificacao" target="21" />
+      <module name="notificacao.main" target="21" />
+      <module name="notificacao.test" target="21" />
+      <module name="saldo.main" target="21" />
+      <module name="saldo.test" target="21" />
+      <module name="transacao" target="21" />
+      <module name="transacao.main" target="21" />
+      <module name="transacao.test" target="21" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
