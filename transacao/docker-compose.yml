@@ -1,25 +1,25 @@
 version: '3.8'
 
 services:
-  camunda:
-    image: camunda/camunda-bpm-platform:latest
-    ports:
-      - "8080:8080"
-    networks:
-      - banking-network
+#  camunda:
+#    image: camunda/camunda-bpm-platform:latest
+#    ports:
+#      - "8080:8080"
+#    networks:
+#      - banking-network
 
-  transacao-service:
-    build: .
-    ports:
-      - "8081:8081"
-    environment:
-      CAMUNDA_URL: http://camunda:8080/engine-rest
-      MONGO_URI: mongodb://mongodb:27017/banking
-    depends_on:
-      - camunda
-      - mongodb
-    networks:
-      - banking-network
+#  transacao-service:
+#    build: .
+#    ports:
+#      - "8081:8081"
+#    environment:
+#      CAMUNDA_URL: http://camunda:8080/engine-rest
+#      MONGO_URI: mongodb://mongodb:27017/banking
+#    depends_on:
+#      - camunda
+#      - mongodb
+#    networks:
+#      - banking-network
 
   mongodb:
     image: mongo:latest

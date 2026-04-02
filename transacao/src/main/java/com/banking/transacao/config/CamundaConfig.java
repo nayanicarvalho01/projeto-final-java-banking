@@ -9,7 +9,7 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 @Slf4j
-@Configuration
+//@Configuration
 public class CamundaConfig {
 
     @Value("${camunda.bpm.client.base-url:http://localhost:8080/engine-rest}")

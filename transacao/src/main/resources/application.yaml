@@ -17,9 +17,6 @@ camunda:
   bpm:
     client:
       base-url: http://localhost:8080/engine-rest
-      worker-id: transacao-worker
-      max-tasks: 10
-      lock-duration: 10000
 
 logging:
   level:

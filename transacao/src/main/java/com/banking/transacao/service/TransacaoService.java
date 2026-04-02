@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Slf4j
-@Service
+//@Service
 @RequiredArgsConstructor
 public class TransacaoService {
 
