@@ -1,6 +1,10 @@
 package com.banking.transacao.model.enumerated;
 
 public enum Tipo {
-    CREDITO,
-    DEBITO;
+    DEBITO,
+    CREDITO;
+
+    public String toTipoSaldo() {
+        return this.name();
+    }
 }

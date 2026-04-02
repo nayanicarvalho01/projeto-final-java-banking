@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: org.jgrapht:jgrapht-core:1.4.0" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="org.jgrapht" artifactId="jgrapht-core" version="1.4.0" baseVersion="1.4.0" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jgrapht/jgrapht-core/1.4.0/b6a0d2d511bec1ca30798e0defc6cbaab3d77c7c/jgrapht-core-1.4.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

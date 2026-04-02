@@ -1,9 +1,29 @@
+spring:
+  application:
+    name: transacao
+  
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/transacao-db
+
+server:
+  port: 8082
+
+saldo:
+  service:
+    url: http://localhost:8081
+
 camunda:
   bpm:
     client:
-      base-url: http://camunda:8080/engine-rest # Docker
+      base-url: http://localhost:8080/engine-rest
+      worker-id: transacao-worker
+      max-tasks: 10
+      lock-duration: 10000
 
-spring:
-  data:
-    mongodb:
-      uri: mongodb://localhost:27017/banking
+logging:
+  level:
+    com.banking.transacao: DEBUG
+    org.camunda: INFO
+    org.springframework.web: INFO
+    org.mongodb: INFO
