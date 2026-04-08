@@ -1,3 +1,27 @@
 spring:
   application:
     name: notificacao
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: notificacao-group
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      properties:
+        max.poll.interval.ms: 300000
+    listener:
+      ack-mode: manual
+
+server:
+  port: 8083
+
+logging:
+  level:
+    com.banking.notificacao: INFO
+    org.springframework.kafka: DEBUG
+    org.springframework.web: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"

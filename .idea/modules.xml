@@ -2,6 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/extrato-fatura.iml" filepath="$PROJECT_DIR$/.idea/modules/extrato-fatura.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/extrato-fatura.main.iml" filepath="$PROJECT_DIR$/.idea/modules/extrato-fatura.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/extrato-fatura.test.iml" filepath="$PROJECT_DIR$/.idea/modules/extrato-fatura.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/notificacao.iml" filepath="$PROJECT_DIR$/.idea/modules/notificacao.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/notificacao.main.iml" filepath="$PROJECT_DIR$/.idea/modules/notificacao.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/notificacao.test.iml" filepath="$PROJECT_DIR$/.idea/modules/notificacao.test.iml" />

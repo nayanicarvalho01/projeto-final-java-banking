@@ -1,6 +1,7 @@
 package com.banking.saldo.controller;
 
 import com.banking.saldo.model.Saldo;
+import com.banking.saldo.model.dto.AtualizarSaldoRequest;
 import com.banking.saldo.model.dto.CriarContaRequest;
 import com.banking.saldo.model.dto.SaldoResponse;
 import com.banking.saldo.service.SaldoService;
@@ -63,16 +64,17 @@ public class SaldoController {
         return ResponseEntity.ok(SaldoResponse.fromSaldo(saldo));
     }
 
-//    @PutMapping("/{contaId}")
-//    public ResponseEntity<SaldoResponseDTO> atualizarSaldo(
-//            @PathVariable String contaId,
-//            @RequestBody @Valid AtualizarSaldoDTO request) {
-//
-//        log.info("Atualização - Conta: {}, Tipo: {}, Valor: {}",
-//                contaId, request.getTipo(), request.getValor());
-//
-//        Saldo saldo = saldoService.atualizar(contaId, request.getValor(), request.getTipo());
-//
-//        return ResponseEntity.ok(SaldoResponseDTO.fromSaldo(saldo));
-//    }
+    @PutMapping("/{contaId}")
+    public ResponseEntity<SaldoResponse> atualizarSaldo(
+            @PathVariable String contaId,
+            @RequestBody @Valid AtualizarSaldoRequest request) {
+
+        Saldo saldo = saldoService.atualizar(
+                contaId,
+                request.getValor(),
+                request.getTipo()
+        );
+
+        return ResponseEntity.ok(SaldoResponse.fromSaldo(saldo));
+    }
 }

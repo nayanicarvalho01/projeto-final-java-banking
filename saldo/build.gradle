@@ -43,6 +43,9 @@ dependencies {
     // Apache Commons Pool (para pool de conexões Redis)
     implementation 'org.apache.commons:commons-pool2'
 
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.2'
+
     // Jackson para suporte a Java 8 Date/Time (LocalDateTime, Instant)
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 

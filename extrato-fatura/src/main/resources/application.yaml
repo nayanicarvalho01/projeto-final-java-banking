@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: extrato-fatura
+
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/extrato-fatura-db
+
+server:
+  port: 8084
+
+camunda:
+  bpm:
+    client:
+      base-url: http://localhost:8080/engine-rest
+      worker-id: extrato-fatura-worker
+      max-tasks: 10
+
+  worker:
+    retry:
+      max: 3
+      delay: 1000
+    lock-duration: 20000
+
+logging:
+  level:
+    com.banking.extratofatura: INFO
+    org.camunda: DEBUG

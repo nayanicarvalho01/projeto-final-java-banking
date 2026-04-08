@@ -27,21 +27,24 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.kafka:spring-kafka'
 
+    implementation 'org.camunda.bpm:camunda-external-task-client:7.20.0'
+
+    // JAXB para Java 21 (AMBOS são necessários!)
     implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
     implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.2'
 
-    // Camunda External Task Client
-    implementation 'org.camunda.bpm:camunda-external-task-client:7.20.0' // ✅ Corrigido
+    // ← ADICIONAR ESTAS 2 LINHAS (javax - legado):
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+    implementation 'com.sun.xml.bind:jaxb-impl:2.3.9'
 
-    // Jackson
     implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
-    // Lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    // Testes
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

@@ -3,11 +3,13 @@ package com.banking.saldo.service;
 import com.banking.saldo.model.Saldo;
 import com.banking.saldo.model.Tipo;
 import com.banking.saldo.repository.SaldoMongoRepository;
+import com.banking.saldo.repository.SaldoRedisRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
 
 @Slf4j
@@ -16,10 +18,7 @@ import java.time.Instant;
 public class SaldoService {
 
     private final SaldoMongoRepository mongoRepository;
-    private final SaldoCacheRedisService cacheService;
-    private final RedisLockService lockService;
-
-    private static final String LOCK_PREFIX = "lock:conta:";
+    private final SaldoRedisRepository redisRepository;
 
     public Saldo criarConta(String contaId, BigDecimal saldoInicial, BigDecimal limiteCredito) {
         log.info("Criando conta: {}", contaId);
@@ -27,6 +26,11 @@ public class SaldoService {
         if (mongoRepository.existsByContaId(contaId)) {
             throw new RuntimeException("Conta já existe: " + contaId);
         }
+
+        Long saldoCentavos = toCentavos(saldoInicial);
+        Long limiteCentavos = toCentavos(limiteCredito);
+
+        redisRepository.inicializar(contaId, saldoCentavos, limiteCentavos);
 
         Saldo saldo = Saldo.builder()
                 .contaId(contaId)
@@ -37,106 +41,83 @@ public class SaldoService {
                 .build();
 
         mongoRepository.save(saldo);
-        cacheService.save(saldo);
 
         log.info("Conta criada: {}", contaId);
         return saldo;
     }
 
     public Saldo depositar(String contaId, BigDecimal valor) {
-        String lockKey = LOCK_PREFIX + contaId;
+        log.info("Depositando {} na conta {}", valor, contaId);
 
-        if (!lockService.lock(lockKey)) {
-            throw new RuntimeException("Conta em processamento");
-        }
+        Long centavos = toCentavos(valor);
+        redisRepository.depositar(contaId, centavos);
 
-        try {
-            log.info("Depositando {} na conta {}", valor, contaId);
+        atualizarMongoDB(contaId);
 
-            Saldo saldo = buscarSaldo(contaId);
-            saldo.setSaldoDebito(saldo.getSaldoDebito().add(valor));
-            saldo.setUltimaAtualizacao(Instant.now());
-
-            mongoRepository.save(saldo);
-            cacheService.save(saldo);
-
-            log.info("Depósito realizado: {}", contaId);
-            return saldo;
-
-        } catch (Exception e) {
-            log.error("Erro ao depositar: {}", e.getMessage());
-            cacheService.evict(contaId);
-            throw e;
-        } finally {
-            lockService.unlock(lockKey);
-        }
-    }
-
-    public Saldo buscarSaldo(String contaId) {
-        Saldo saldo = cacheService.get(contaId);
-
-        if (saldo != null) {
-            return saldo;
-        }
-
-        saldo = mongoRepository.findByContaId(contaId)
-                .orElseThrow(() -> new RuntimeException("Conta não encontrada: " + contaId));
-
-        cacheService.save(saldo);
-        return saldo;
+        return buscarSaldo(contaId);
     }
 
     public Saldo atualizar(String contaId, BigDecimal valor, Tipo tipo) {
-        String lockKey = LOCK_PREFIX + contaId;
+        log.info("Atualizando saldo - Conta: {}, Tipo: {}", contaId, tipo);
 
-        if (!lockService.lock(lockKey)) {
-            throw new RuntimeException("Conta em processamento");
+        Long centavos = toCentavos(valor);
+
+        if (tipo == Tipo.DEBITO) {
+            redisRepository.debitar(contaId, centavos);
+        } else {
+            redisRepository.creditar(contaId, centavos);
         }
 
+        atualizarMongoDB(contaId);
+
+        return buscarSaldo(contaId);
+    }
+
+    public Saldo buscarSaldo(String contaId) {
+        Long saldoCentavos = redisRepository.getSaldoDebito(contaId);
+        Long creditoDisponivelCentavos = redisRepository.getCreditoDisponivel(contaId);
+
+        BigDecimal saldoDebito = toReais(saldoCentavos);
+        BigDecimal creditoDisponivel = toReais(creditoDisponivelCentavos);
+
+        Saldo saldoMongo = mongoRepository.findByContaId(contaId)
+                .orElseThrow(() -> new RuntimeException("Conta não encontrada: " + contaId));
+
+        BigDecimal limiteCredito = saldoMongo.getLimiteCredito();
+        BigDecimal creditoUtilizado = limiteCredito.subtract(creditoDisponivel);
+
+        return Saldo.builder()
+                .contaId(contaId)
+                .saldoDebito(saldoDebito)
+                .limiteCredito(limiteCredito)
+                .creditoUtilizado(creditoUtilizado)
+                .ultimaAtualizacao(Instant.now())
+                .build();
+    }
+
+    private void atualizarMongoDB(String contaId) {
         try {
-            log.info("Atualizando saldo - Conta: {}, Tipo: {}", contaId, tipo);
+            Saldo saldoAtual = buscarSaldo(contaId);
 
-            Saldo saldo = buscarSaldo(contaId);
+            Saldo saldoMongo = mongoRepository.findByContaId(contaId)
+                    .orElseThrow(() -> new RuntimeException("Conta não encontrada no MongoDB"));
 
-            if (tipo == Tipo.DEBITO) {
-                processarDebito(saldo, valor);
-            } else {
-                processarCredito(saldo, valor);
-            }
+            saldoMongo.setSaldoDebito(saldoAtual.getSaldoDebito());
+            saldoMongo.setCreditoUtilizado(saldoAtual.getCreditoUtilizado());
+            saldoMongo.setUltimaAtualizacao(Instant.now());
 
-            saldo.setUltimaAtualizacao(Instant.now());
-            mongoRepository.save(saldo);
-            cacheService.save(saldo);
-
-            log.info("Saldo atualizado: {}", contaId);
-            return saldo;
+            mongoRepository.save(saldoMongo);
 
         } catch (Exception e) {
-            log.error("Erro ao atualizar saldo: {}", e.getMessage());
-            cacheService.evict(contaId);
-            throw e;
-        } finally {
-            lockService.unlock(lockKey);
+            log.error("Erro ao sincronizar MongoDB: {}", e.getMessage());
         }
     }
 
-    private void processarDebito(Saldo saldo, BigDecimal valor) {
-        if (saldo.getSaldoDebito().compareTo(valor) < 0) {
-            throw new RuntimeException(
-                    String.format("Saldo insuficiente. Disponível: %s", saldo.getSaldoDebito())
-            );
-        }
-        saldo.setSaldoDebito(saldo.getSaldoDebito().subtract(valor));
+    private Long toCentavos(BigDecimal valor) {
+        return valor.multiply(new BigDecimal("100")).longValue();
     }
 
-    private void processarCredito(Saldo saldo, BigDecimal valor) {
-        BigDecimal disponivel = saldo.getLimiteCreditoDisponivel();
-
-        if (disponivel.compareTo(valor) < 0) {
-            throw new RuntimeException(
-                    String.format("Limite insuficiente. Disponível: %s", disponivel)
-            );
-        }
-        saldo.setCreditoUtilizado(saldo.getCreditoUtilizado().add(valor));
+    private BigDecimal toReais(Long centavos) {
+        return new BigDecimal(centavos).divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP);
     }
 }

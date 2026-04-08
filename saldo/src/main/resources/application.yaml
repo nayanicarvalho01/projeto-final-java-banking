@@ -1,3 +1,34 @@
 spring:
   application:
     name: saldo
+
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/saldo-db
+
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000ms
+
+server:
+  port: 8081
+
+camunda:
+  bpm:
+    client:
+      base-url: http://localhost:8080/engine-rest
+      worker-id: saldo-worker
+      max-tasks: 10
+      lock-duration: 10000
+
+  worker:
+    retry:
+      max: 3
+      delay: 1000
+    lock-duration: 20000
+
+logging:
+  level:
+    com.banking.saldo: INFO
+    org.springframework.data.redis: DEBUG

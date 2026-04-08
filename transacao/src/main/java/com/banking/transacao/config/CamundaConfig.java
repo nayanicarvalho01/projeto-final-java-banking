@@ -39,11 +39,11 @@ public class CamundaConfig {
                     .lockDuration(lockDuration)
                     .build();
 
-            log.info("✅ Camunda External Task Client configurado");
+            log.info("Camunda External Task Client configurado");
             return client;
 
         } catch (Exception e) {
-            log.error("❌ Erro ao configurar Camunda", e);
+            log.error("Erro ao configurar Camunda", e);
             throw new RuntimeException("Falha ao conectar com Camunda: " + e.getMessage(), e);
         }
     }
