@@ -10,13 +10,17 @@
                   exporter="Camunda Modeler"
                   exporterVersion="5.0.0">
 
-  <bpmn:process id="processo-transacao" name="Processo de Transação" isExecutable="true">
+  <bpmn:process id="processo-transacao"
+                name="Processo de Transação"
+                isExecutable="true"
+                camunda:historyTimeToLive="P30D">
 
     <bpmn:startEvent id="StartEvent" name="Transação Aprovada">
       <bpmn:outgoing>Flow_1</bpmn:outgoing>
     </bpmn:startEvent>
 
-    <bpmn:serviceTask id="RegistrarTransacao" name="Registrar Transação"
+    <bpmn:serviceTask id="RegistrarTransacao"
+                      name="Registrar Transação"
                       camunda:type="external"
                       camunda:topic="registrar-transacao">
       <bpmn:incoming>Flow_1</bpmn:incoming>
@@ -29,14 +33,16 @@
       <bpmn:outgoing>Flow_Credito</bpmn:outgoing>
     </bpmn:exclusiveGateway>
 
-    <bpmn:serviceTask id="AtualizarExtrato" name="Atualizar Extrato"
+    <bpmn:serviceTask id="AtualizarExtrato"
+                      name="Atualizar Extrato"
                       camunda:type="external"
                       camunda:topic="atualizar-extrato">
       <bpmn:incoming>Flow_Debito</bpmn:incoming>
       <bpmn:outgoing>Flow_3</bpmn:outgoing>
     </bpmn:serviceTask>
 
-    <bpmn:serviceTask id="AtualizarFatura" name="Atualizar Fatura"
+    <bpmn:serviceTask id="AtualizarFatura"
+                      name="Atualizar Fatura"
                       camunda:type="external"
                       camunda:topic="atualizar-fatura">
       <bpmn:incoming>Flow_Credito</bpmn:incoming>
@@ -49,7 +55,8 @@
       <bpmn:outgoing>Flow_5</bpmn:outgoing>
     </bpmn:exclusiveGateway>
 
-    <bpmn:serviceTask id="NotificarSolicitante" name="Notificar Solicitante"
+    <bpmn:serviceTask id="NotificarSolicitante"
+                      name="Notificar Solicitante"
                       camunda:type="external"
                       camunda:topic="notificar-solicitante">
       <bpmn:incoming>Flow_5</bpmn:incoming>
@@ -79,12 +86,15 @@
 
   </bpmn:process>
 
-  <!-- BPMN Diagram (opcional - apenas visual) -->
+  <!-- BPMN Diagram (visual) -->
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="processo-transacao">
 
       <bpmndi:BPMNShape id="StartEvent_di" bpmnElement="StartEvent">
         <dc:Bounds x="152" y="102" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="135" y="145" width="70" height="27"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
 
       <bpmndi:BPMNShape id="RegistrarTransacao_di" bpmnElement="RegistrarTransacao">
@@ -93,6 +103,9 @@
 
       <bpmndi:BPMNShape id="Gateway_Tipo_di" bpmnElement="Gateway_Tipo" isMarkerVisible="true">
         <dc:Bounds x="395" y="95" width="50" height="50"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="401" y="71" width="38" height="14"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
 
       <bpmndi:BPMNShape id="AtualizarExtrato_di" bpmnElement="AtualizarExtrato">
@@ -113,6 +126,9 @@
 
       <bpmndi:BPMNShape id="EndEvent_di" bpmnElement="EndEvent">
         <dc:Bounds x="912" y="102" width="36" height="36"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="904" y="145" width="52" height="14"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
 
       <!-- Edges -->
@@ -129,12 +145,18 @@
       <bpmndi:BPMNEdge id="Flow_Debito_di" bpmnElement="Flow_Debito">
         <di:waypoint x="445" y="120"/>
         <di:waypoint x="500" y="120"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="456" y="102" width="33" height="14"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
 
       <bpmndi:BPMNEdge id="Flow_Credito_di" bpmnElement="Flow_Credito">
         <di:waypoint x="420" y="145"/>
         <di:waypoint x="420" y="240"/>
         <di:waypoint x="500" y="240"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="438" y="223" width="35" height="14"/>
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
 
       <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3">
