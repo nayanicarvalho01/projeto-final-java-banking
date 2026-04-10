@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: org.springframework.integration:spring-integration-kafka:7.0.4" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="org.springframework.integration" artifactId="spring-integration-kafka" version="7.0.4" baseVersion="7.0.4" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.integration/spring-integration-kafka/7.0.4/e3b8dbe747b47a2013308ff6a9a4d7fe93b59b64/spring-integration-kafka-7.0.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

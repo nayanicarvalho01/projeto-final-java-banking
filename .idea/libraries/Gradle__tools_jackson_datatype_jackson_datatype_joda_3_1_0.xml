@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: tools.jackson.datatype:jackson-datatype-joda:3.1.0" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="tools.jackson.datatype" artifactId="jackson-datatype-joda" version="3.1.0" baseVersion="3.1.0" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/tools.jackson.datatype/jackson-datatype-joda/3.1.0/1b4fd279d79efb19eba89fe5f0f86b25692cf0a6/jackson-datatype-joda-3.1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

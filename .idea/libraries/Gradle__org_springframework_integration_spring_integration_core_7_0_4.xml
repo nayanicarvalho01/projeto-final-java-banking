@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: org.springframework.integration:spring-integration-core:7.0.4" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="org.springframework.integration" artifactId="spring-integration-core" version="7.0.4" baseVersion="7.0.4" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.integration/spring-integration-core/7.0.4/aaaa3e76483c3d3d5a795cfb15001aac3590e867/spring-integration-core-7.0.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

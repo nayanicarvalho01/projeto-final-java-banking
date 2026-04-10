@@ -1,14 +1,19 @@
 package com.banking.notificacao.kafka;
 
+import com.banking.notificacao.enumerated.Status;
+import com.banking.notificacao.enumerated.Tipo;
 import com.banking.notificacao.model.NotificacaoEvent;
 import com.banking.notificacao.service.NotificacaoService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.Map;
+import java.util.function.Consumer;
 
 @Slf4j
 @Component
@@ -18,33 +23,38 @@ public class NotificacaoConsumer {
     private final NotificacaoService notificacaoService;
     private final ObjectMapper objectMapper;
 
-    @KafkaListener(
-            topics = {"transacoes-aprovadas", "transacoes-reprovadas"},
-            groupId = "${spring.kafka.consumer.group-id}"
-    )
-    public void consumir(String mensagem, Acknowledgment ack) {
-        try {
-            NotificacaoEvent event = objectMapper.readValue(mensagem, NotificacaoEvent.class);
+    @Bean
+    public Consumer<String> notificacoes() {
+        return mensagem -> {
+            try {
+                log.info("📩 Mensagem recebida do Kafka");
 
-            log.info("Evento recebido - Conta: {}, Status: {}",
-                    event.getContaId(), event.getStatus());
+                // Deserializar JSON
+                @SuppressWarnings("unchecked")
+                Map<String, Object> map = objectMapper.readValue(mensagem, Map.class);
 
-            boolean enviado = notificacaoService.processar(event);
+                // Construir NotificacaoEvent
+                NotificacaoEvent event = NotificacaoEvent.builder()
+                        .transacaoId((String) map.get("transacaoId"))
+                        .contaId((String) map.get("contaId"))
+                        .comerciante((String) map.get("comerciante"))
+                        .localizacao((String) map.get("localizacao"))
+                        .valor(new BigDecimal(map.get("valor").toString()))
+                        .tipo(Tipo.valueOf((String) map.get("tipo")))
+                        .status(Status.valueOf((String) map.get("status")))
+                        .dataHora(Instant.ofEpochSecond(((Number) map.get("dataHora")).longValue()))
+                        .build();
 
-            if (enviado) {
-                ack.acknowledge();
-                log.info("Offset commitado - Conta: {}", event.getContaId());
-            } else {
-                log.warn("Offset NÃO commitado - Conta: {} (será reprocessado)",
-                        event.getContaId());
+                log.info("📩 Evento recebido - Conta: {}, Status: {}, Tipo: {}",
+                        event.getContaId(), event.getStatus(), event.getTipo());
+
+                notificacaoService.processar(event);
+
+                log.info("✅ Notificação processada - Conta: {}", event.getContaId());
+
+            } catch (Exception e) {
+                log.error("❌ Erro ao processar mensagem: {}", mensagem, e);
             }
-
-        } catch (JsonProcessingException e) {
-            log.error("JSON inválido (commitando): {}", mensagem, e);
-            ack.acknowledge();
-
-        } catch (Exception e) {
-            log.error("Erro ao processar evento (será reprocessado)", e);
-        }
+        };
     }
 }

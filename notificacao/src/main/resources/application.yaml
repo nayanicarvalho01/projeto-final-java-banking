@@ -2,18 +2,23 @@ spring:
   application:
     name: notificacao
 
-  kafka:
-    bootstrap-servers: localhost:9092
-    consumer:
-      group-id: notificacao-group
-      auto-offset-reset: earliest
-      enable-auto-commit: false
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      properties:
-        max.poll.interval.ms: 300000
-    listener:
-      ack-mode: manual
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/notificacao-db
+
+  cloud:
+    function:
+      definition: notificacoes
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:9092
+      bindings:
+        notificacoes-in-0:
+          destination: transacoes-aprovadas,transacoes-reprovadas
+          group: notificacao-group
+          consumer:
+            auto-offset-reset: earliest
 
 server:
   port: 8083
@@ -21,7 +26,4 @@ server:
 logging:
   level:
     com.banking.notificacao: INFO
-    org.springframework.kafka: DEBUG
-    org.springframework.web: INFO
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    org.springframework.cloud.stream: DEBUG

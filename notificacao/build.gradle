@@ -32,7 +32,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
     // Kafka
-    implementation 'org.springframework.kafka:spring-kafka'
+    implementation 'org.springframework.cloud:spring-cloud-stream'
+    implementation 'org.springframework.cloud:spring-cloud-stream-binder-kafka'
 
     // Jackson (JSON)
     implementation 'com.fasterxml.jackson.core:jackson-databind'
