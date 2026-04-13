@@ -21,8 +21,11 @@ public class CamundaConfig {
     @Value("${camunda.bpm.client.max-tasks:10}")
     private Integer maxTasks;
 
-    @Value("${camunda.bpm.client.lock-duration:10000}")
+    @Value("${camunda.bpm.client.lock-duration:60000}")
     private Long lockDuration;
+
+    @Value("${camunda.bpm.client.async-response-timeout:2000}")
+    private Long asyncResponseTimeout;
 
     @Bean
     public ExternalTaskClient externalTaskClient() {
@@ -35,7 +38,7 @@ public class CamundaConfig {
                     .baseUrl(camundaUrl)
                     .workerId(workerId)
                     .maxTasks(maxTasks)
-                    .asyncResponseTimeout(lockDuration)
+                    .asyncResponseTimeout(asyncResponseTimeout)
                     .lockDuration(lockDuration)
                     .build();
 
@@ -53,8 +56,8 @@ public class CamundaConfig {
         log.info("Configurando RestTemplate");
 
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-        factory.setConnectTimeout(5000);
-        factory.setReadTimeout(5000);
+        factory.setConnectTimeout(10000);
+        factory.setReadTimeout(20000);
 
         return new RestTemplate(factory);
     }

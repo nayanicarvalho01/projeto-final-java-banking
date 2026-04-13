@@ -1,0 +1,26 @@
+server:
+  port: 8000
+
+spring:
+  application:
+    name: frontend-service
+
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+
+# URLs dos microserviços
+services:
+  notificacao:
+    url: http://localhost:8083
+  saldo:
+    url: http://localhost:8081
+  transacao:
+    url: http://localhost:8082
+  extrato-fatura:
+    url: http://localhost:8084
+
+logging:
+  level:
+    com.banking.frontend: DEBUG

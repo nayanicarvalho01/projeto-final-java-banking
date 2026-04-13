@@ -24,7 +24,7 @@ public class AtualizarFaturaWorker {
     @Value("${camunda.worker.retry.max:3}")
     private int maxRetries;
 
-    @Value("${camunda.worker.retry.delay:1000}")
+    @Value("${camunda.worker.retry.delay:10000}")
     private long retryDelay;
 
     @Value("${camunda.worker.lock-duration:20000}")
@@ -33,7 +33,6 @@ public class AtualizarFaturaWorker {
     @PostConstruct
     public void subscribe() {
         externalTaskClient.subscribe("atualizar-fatura")
-                .lockDuration(lockDuration)
                 .handler(this::handleTask)
                 .open();
 

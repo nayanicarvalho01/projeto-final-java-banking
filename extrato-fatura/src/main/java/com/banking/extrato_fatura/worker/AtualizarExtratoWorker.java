@@ -24,16 +24,15 @@ public class AtualizarExtratoWorker {
     @Value("${camunda.worker.retry.max:3}")
     private int maxRetries;
 
-    @Value("${camunda.worker.retry.delay:1000}")
+    @Value("${camunda.worker.retry.delay:5000}")
     private long retryDelay;
 
-    @Value("${camunda.worker.lock-duration:20000}")
+    @Value("${camunda.worker.lock-duration:30000}")
     private long lockDuration;
 
     @PostConstruct
     public void subscribe() {
         externalTaskClient.subscribe("atualizar-extrato")
-                .lockDuration(lockDuration)
                 .handler(this::handleTask)
                 .open();
 

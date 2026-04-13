@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificações - Agibank</title>
+    <link rel="stylesheet" th:href="@{/css/notificacoes.css}">
+</head>
+<body>
+<div class="phone-container">
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-left">
+            <span class="carrier">TIM</span>
+        </div>
+        <div class="status-right">
+            <span class="signal">📶</span>
+            <span class="wifi">📡</span>
+            <span class="battery">🔋 100</span>
+        </div>
+    </div>
+
+    <!-- Hora e Data -->
+    <div class="time-display">
+        <div class="date" id="currentDate"></div>
+        <div class="time" id="currentTime"></div>
+    </div>
+
+    <!-- Área de Notificações -->
+    <div class="notifications-container" id="notificationsContainer">
+        <!-- Notificações aparecerão aqui via JavaScript -->
+    </div>
+
+    <!-- Indicador de conexão -->
+    <div class="connection-status">
+        <div class="status-dot" id="statusDot"></div>
+        <span id="statusText">Conectando...</span>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="bottom-bar">
+        <div class="bottom-text">Passe o dedo para cima para abrir</div>
+    </div>
+</div>
+
+<!-- Dados do Thymeleaf -->
+<input type="hidden" id="contaId" th:value="${contaId}">
+
+<script th:src="@{/js/notificacoes.js}"></script>
+</body>
+</html>

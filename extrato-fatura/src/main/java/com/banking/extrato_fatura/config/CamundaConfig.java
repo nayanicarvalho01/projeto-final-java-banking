@@ -17,12 +17,21 @@ public class CamundaConfig {
     @Value("${camunda.bpm.client.max-tasks:10}")
     private int maxTasks;
 
+    @Value("${camunda.bpm.client.async-response-timeout:2000}")
+    private long asyncResponseTimeout;
+
+    @Value("${camunda.bpm.client.lock-duration:60000}")
+    private long lockDuration;
+
+
     @Bean
     public ExternalTaskClient externalTaskClient() {
         return ExternalTaskClient.create()
                 .baseUrl(camundaUrl)
                 .workerId(workerId)
                 .maxTasks(maxTasks)
+                .asyncResponseTimeout(asyncResponseTimeout)
+                .lockDuration(lockDuration)
                 .build();
     }
 }

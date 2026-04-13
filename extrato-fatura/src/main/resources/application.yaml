@@ -15,12 +15,13 @@ camunda:
       base-url: http://localhost:8080/engine-rest
       worker-id: extrato-fatura-worker
       max-tasks: 10
+      async-response-timeout: 2000
 
   worker:
     retry:
       max: 3
-      delay: 1000
-    lock-duration: 20000
+      delay: 5000
+    lock-duration: 60000
 
 logging:
   level:

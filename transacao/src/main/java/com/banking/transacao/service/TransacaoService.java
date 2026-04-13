@@ -3,11 +3,13 @@ package com.banking.transacao.service;
 import com.banking.transacao.client.CamundaClient;
 import com.banking.transacao.client.SaldoClient;
 import com.banking.transacao.model.Transacao;
+import com.banking.transacao.model.dto.TransacaoEvent;
 import com.banking.transacao.model.dto.TransacaoRequest;
 import com.banking.transacao.model.enumerated.Status;
 import com.banking.transacao.repository.TransacaoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -23,6 +25,7 @@ public class TransacaoService {
     private final TransacaoRepository transacaoRepository;
     private final SaldoClient saldoClient;
     private final CamundaClient camundaClient;
+    private final KafkaTemplate<String, TransacaoEvent> kafkaTemplate;
 
     public Transacao processar(TransacaoRequest request) {
         log.info("Processando transação - Conta: {}, Valor: {}, Tipo: {}",
@@ -45,6 +48,20 @@ public class TransacaoService {
         } catch (Exception e) {
             log.warn("Transação negada - Conta: {}, Motivo: {}",
                     request.getContaId(), e.getMessage());
+
+            TransacaoEvent event = TransacaoEvent.builder()
+                    .transacaoId(null)
+                    .contaId(request.getContaId())
+                    .comerciante(request.getComerciante())
+                    .localizacao(request.getLocalizacao())
+                    .valor(request.getValor())
+                    .tipo(request.getTipo().name())
+                    .status("NEGADA")
+                    .dataHora(Instant.now())
+                    .build();
+
+            kafkaTemplate.send("transacoes-reprovadas", request.getContaId(), event);
+            log.info("Notificação de transação negada enviada - Conta: {}", request.getContaId());
 
             return construirTransacao(request, Status.NEGADA);
         }

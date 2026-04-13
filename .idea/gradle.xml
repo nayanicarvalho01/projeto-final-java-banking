@@ -13,6 +13,15 @@
         </option>
       </GradleProjectSettings>
       <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/frontend" />
+        <option name="gradleJvm" value="ms-21 (10)" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/frontend" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$/notificacao" />
         <option name="gradleJvm" value="ms-21 (10)" />
         <option name="modules">

@@ -21,7 +21,6 @@ public class RegistrarTransacaoWorker {
     @PostConstruct
     public void subscribe() {
         externalTaskClient.subscribe("registrar-transacao")
-                .lockDuration(10000)
                 .handler(this::handleTask)
                 .open();
 
