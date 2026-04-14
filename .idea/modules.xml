@@ -2,11 +2,22 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/extrato-fatura.iml" filepath="$PROJECT_DIR$/.idea/modules/extrato-fatura.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/extrato-fatura.main.iml" filepath="$PROJECT_DIR$/.idea/modules/extrato-fatura.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/extrato-fatura.test.iml" filepath="$PROJECT_DIR$/.idea/modules/extrato-fatura.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/frontend.iml" filepath="$PROJECT_DIR$/.idea/modules/frontend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/frontend.main.iml" filepath="$PROJECT_DIR$/.idea/modules/frontend.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/frontend.test.iml" filepath="$PROJECT_DIR$/.idea/modules/frontend.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/notificacao.iml" filepath="$PROJECT_DIR$/.idea/modules/notificacao.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/notificacao.main.iml" filepath="$PROJECT_DIR$/.idea/modules/notificacao.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/notificacao.test.iml" filepath="$PROJECT_DIR$/.idea/modules/notificacao.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/projeto-final-java-banking-main.iml" filepath="$PROJECT_DIR$/.idea/projeto-final-java-banking-main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/saldo.iml" filepath="$PROJECT_DIR$/.idea/modules/saldo.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/saldo.main.iml" filepath="$PROJECT_DIR$/.idea/modules/saldo.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/saldo.test.iml" filepath="$PROJECT_DIR$/.idea/modules/saldo.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/transacao.iml" filepath="$PROJECT_DIR$/.idea/modules/transacao.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/transacao.main.iml" filepath="$PROJECT_DIR$/.idea/modules/transacao.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/transacao.test.iml" filepath="$PROJECT_DIR$/.idea/modules/transacao.test.iml" />
     </modules>
   </component>
 </project>

@@ -1,0 +1,264 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #f5fafa;
+}
+
+.phone-container {
+    width: 390px;
+    height: 844px;
+    background: #fff;
+    border-radius: 50px;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    border: 12px solid #1a1a1a;
+    position: relative;
+}
+
+.phone-container::-webkit-scrollbar {
+    width: 0;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 60px 20px 20px;
+    background: linear-gradient(135deg, #1466D8 0%, #0451bd 100%);
+    color: white;
+}
+
+.back-button, .menu-button {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header h1 {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* Saldo Card */
+.saldo-card {
+    background: linear-gradient(135deg, #2863fa 0%, #0451bd 100%);
+    margin: 30px 20px 20px;
+    padding: 25px;
+    border-radius: 20px;
+    color: white;
+    box-shadow: 0 10px 30px rgba(0, 168, 104, 0.3);
+}
+
+.saldo-section {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.saldo-label {
+    font-size: 14px;
+    opacity: 0.9;
+    margin-bottom: 8px;
+}
+
+.saldo-valor {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.limite-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.limite-icon {
+    font-size: 16px;
+}
+
+.credito-section {
+    padding-top: 10px;
+}
+
+.credito-label {
+    font-size: 14px;
+    opacity: 0.9;
+    margin-bottom: 8px;
+}
+
+.credito-valor {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.credito-utilizado {
+    font-size: 13px;
+    opacity: 0.8;
+}
+
+/* Actions Bar */
+.actions-bar {
+    display: flex;
+    gap: 15px;
+    padding: 0 20px 20px;
+}
+
+.action-button {
+    flex: 1;
+    background: white;
+    border: 1px solid #e0e0e0;
+    padding: 15px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.action-button:hover {
+    background: #f5f5f5;
+    transform: translateY(-2px);
+}
+
+.action-icon {
+    font-size: 24px;
+}
+
+.action-button span:last-child {
+    font-size: 13px;
+    font-weight: 500;
+    color: #333;
+}
+
+/* Histórico */
+.historico-section {
+    padding: 20px;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.transacoes-group {
+    margin-bottom: 30px;
+}
+
+.group-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #666;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.transacao-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    transition: all 0.2s;
+}
+
+.transacao-item:hover {
+    background: #f0f0f0;
+}
+
+.transacao-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.transacao-icon.aprovada {
+    background: #E8F5E9;
+    color: #4CAF50;
+}
+
+.transacao-icon.negada {
+    background: #FFEBEE;
+    color: #F44336;
+}
+
+.transacao-info {
+    flex: 1;
+}
+
+.transacao-comerciante {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.transacao-localizacao {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 2px;
+}
+
+.transacao-data {
+    font-size: 12px;
+    color: #999;
+}
+
+.transacao-valor {
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+}
+
+.transacao-valor.negada {
+    color: #F44336;
+    text-decoration: line-through;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #999;
+}
+
+/* Loading */
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+}

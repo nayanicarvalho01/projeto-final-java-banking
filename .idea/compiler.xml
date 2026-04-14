@@ -10,6 +10,23 @@
         <module name="notificacao.main" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="extrato-fatura" target="21" />
+      <module name="extrato-fatura.main" target="21" />
+      <module name="extrato-fatura.test" target="21" />
+      <module name="frontend" target="21" />
+      <module name="frontend.main" target="21" />
+      <module name="frontend.test" target="21" />
+      <module name="notificacao" target="21" />
+      <module name="notificacao.main" target="21" />
+      <module name="notificacao.test" target="21" />
+      <module name="saldo" target="21" />
+      <module name="saldo.main" target="21" />
+      <module name="saldo.test" target="21" />
+      <module name="transacao" target="21" />
+      <module name="transacao.main" target="21" />
+      <module name="transacao.test" target="21" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">

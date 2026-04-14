@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: org.camunda.bpm:camunda-external-task-client:7.20.0" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="org.camunda.bpm" artifactId="camunda-external-task-client" version="7.20.0" baseVersion="7.20.0" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.camunda.bpm/camunda-external-task-client/7.20.0/1926debf8f81d227626d9fe73107616152993db6/camunda-external-task-client-7.20.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

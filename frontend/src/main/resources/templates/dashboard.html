@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Agibank</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+<div class="phone-container">
+    <!-- Header -->
+    <div class="header">
+        <button class="back-button" onclick="window.history.back()">
+            <span>←</span>
+        </button>
+        <h1>Minha Conta</h1>
+        <button class="menu-button">⋮</button>
+    </div>
+
+    <!-- Saldo Card -->
+    <div class="saldo-card" th:if="${saldo != null}">
+        <div class="saldo-section">
+            <p class="saldo-label">Saldo disponível</p>
+            <h2 class="saldo-valor">
+                R$ <span th:text="${#numbers.formatDecimal(saldo.saldoDebito, 1, 2)}">0,00</span>
+            </h2>
+            <div class="limite-info">
+                <span class="limite-icon">💳</span>
+                <span>R$ <span th:text="${#numbers.formatDecimal(saldo.limiteCredito, 1, 2)}">0,00</span></span>
+            </div>
+        </div>
+
+        <div class="credito-section">
+            <p class="credito-label">Limite disponível</p>
+            <h3 class="credito-valor">
+                R$ <span th:text="${#numbers.formatDecimal(saldo.creditoDisponivel, 1, 2)}">0,00</span>
+            </h3>
+            <div class="credito-utilizado">
+                <span>Utilizado: R$ <span th:text="${#numbers.formatDecimal(saldo.creditoUtilizado, 1, 2)}">0,00</span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Se não houver saldo -->
+    <div class="saldo-card" th:unless="${saldo != null}">
+        <div class="saldo-section">
+            <p class="saldo-label">Saldo disponível</p>
+            <h2 class="saldo-valor">R$ 0,00</h2>
+        </div>
+    </div>
+
+    <!-- Ações Rápidas -->
+    <div class="actions-bar">
+        <button class="action-button" onclick="downloadExtrato()">
+            <span class="action-icon">📄</span>
+            <span>Extrato</span>
+        </button>
+        <button class="action-button" onclick="downloadFatura()">
+            <span class="action-icon">📋</span>
+            <span>Fatura</span>
+        </button>
+    </div>
+
+    <!-- Histórico -->
+    <div class="historico-section">
+        <h3 class="section-title">Histórico</h3>
+
+        <!-- Transações Débito -->
+        <div class="transacoes-group" th:if="${transacoesDebito != null and !#lists.isEmpty(transacoesDebito)}">
+            <h4 class="group-title">💳 Débito</h4>
+            <div class="transacao-item" th:each="transacao : ${transacoesDebito}">
+                <div class="transacao-icon" th:classappend="${transacao.status.name() == 'APROVADA' ? 'aprovada' : 'negada'}">
+                    <span th:text="${transacao.status.name() == 'APROVADA' ? '✓' : '✗'}">✓</span>
+                </div>
+                <div class="transacao-info">
+                    <p class="transacao-comerciante" th:text="${transacao.comerciante}">Comerciante</p>
+                    <p class="transacao-localizacao" th:text="${transacao.localizacao}">Localização</p>
+                    <p class="transacao-data" th:text="${#temporals.format(transacao.dataHora, 'dd/MM/yyyy HH:mm')}">Data</p>
+                </div>
+                <div class="transacao-valor">
+                        <span th:classappend="${transacao.status.name() == 'NEGADA' ? 'negada' : ''}">
+                            R$ <span th:text="${#numbers.formatDecimal(transacao.valor, 1, 2)}">0,00</span>
+                        </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transações Crédito -->
+        <div class="transacoes-group" th:if="${transacoesCredito != null and !#lists.isEmpty(transacoesCredito)}">
+            <h4 class="group-title">💰 Crédito</h4>
+            <div class="transacao-item" th:each="transacao : ${transacoesCredito}">
+                <div class="transacao-icon" th:classappend="${transacao.status.name() == 'APROVADA' ? 'aprovada' : 'negada'}">
+                    <span th:text="${transacao.status.name() == 'APROVADA' ? '✓' : '✗'}">✓</span>
+                </div>
+                <div class="transacao-info">
+                    <p class="transacao-comerciante" th:text="${transacao.comerciante}">Comerciante</p>
+                    <p class="transacao-localizacao" th:text="${transacao.localizacao}">Localização</p>
+                    <p class="transacao-data" th:text="${#temporals.format(transacao.dataHora, 'dd/MM/yyyy HH:mm')}">Data</p>
+                </div>
+                <div class="transacao-valor">
+                        <span th:classappend="${transacao.status.name() == 'NEGADA' ? 'negada' : ''}">
+                            R$ <span th:text="${#numbers.formatDecimal(transacao.valor, 1, 2)}">0,00</span>
+                        </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mensagem se não houver transações -->
+        <div class="empty-state" th:if="${(transacoesDebito == null or #lists.isEmpty(transacoesDebito)) and (transacoesCredito == null or #lists.isEmpty(transacoesCredito))}">
+            <p>Nenhuma transação encontrada</p>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="contaId" th:value="${contaId}">
+<script th:src="@{/js/dashboard.js}"></script>
+</body>
+</html>
