@@ -55,12 +55,12 @@ O ambiente foi instrumentado para fornecer visibilidade total em tempo real:
 *   Java 21 (JDK) instalado localmente.
 *   Uma conta gratuita no [New Relic](https://newrelic.com/) para obter a License Key.
 
-### 1. Configuração do Ambiente
+1. Configuração do Ambiente
 Crie um arquivo `.env` na raiz do projeto e adicione sua chave do New Relic:
 ```env
 NEW_RELIC_LICENSE_KEY=sua_chave_aqui
 
-### 2. Build dos Microserviços (Local)
+2. Build dos Microserviços (Local)
 Para evitar problemas de certificado em redes corporativas durante o build do Docker, gere os arquivos .jar localmente executando o script abaixo na raiz do projeto:
 
 bash
@@ -72,7 +72,7 @@ for d in saldo transacao notificacao extrato-fatura frontend; do
     cd ..
 done
 
-### 3. Subir a Infraestrutura (Docker)
+3. Subir a Infraestrutura (Docker)
 Execute o Docker Compose para criar as imagens e subir todos os containers (Bancos, Kafka, Camunda e Microserviços):
 
 bash
@@ -81,7 +81,7 @@ docker compose up -d --build
 
 (Verifique se todos os serviços estão Healthy rodando docker compose ps)
 
-### 4. Deploy do Processo BPMN (Camunda)
+4. Deploy do Processo BPMN (Camunda)
 Com a infraestrutura rodando, publique o fluxo de trabalho no motor do Camunda:
 
 bash
@@ -90,13 +90,13 @@ curl -X POST http://localhost:8080/engine-rest/deployment/create \
   -F "deployment-name=processo-transacao" \
   -F "processo-transacao.bpmn=@transacao/src/main/resources/bpmn/processo-transacao.bpmn"
 
-### 5. Acessar a Aplicação
+5. Acessar a Aplicação
 Frontend (Simulador): http://localhost:8000
 Camunda Cockpit (Admin): http://localhost:8080/camunda
 Redis Insight (UI): http://localhost:5540
 
 ---
 
-## 👨‍💻 Autor
+👨‍💻 Autor
 Desenvolvido por Nayani Carvalho.
 Projeto criado para fins de estudo e demonstração de arquiteturas modernas, microsserviços e observabilidade avançada.
