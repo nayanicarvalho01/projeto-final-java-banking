@@ -4,10 +4,10 @@ spring:
   
   data:
     mongodb:
-      uri: mongodb://localhost:27017/transacao-db
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:27017/transacao-db}
 
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     consumer:
       group-id: notificacao-group
       auto-offset-reset: earliest
@@ -20,12 +20,12 @@ server:
 
 saldo:
   service:
-    url: http://localhost:8081
+    url: ${SALDO_SERVICE_URL:http://localhost:8081}
 
 camunda:
   bpm:
     client:
-      base-url: http://localhost:8080/engine-rest
+      base-url: ${CAMUNDA_BPM_CLIENT_BASE_URL:http://localhost:8080/engine-rest}
       worker-id: transacao-worker
       max-tasks: 10
       lock-duration: 60000
@@ -35,3 +35,17 @@ logging:
   level:
     com.banking.transacao: INFO
     org.springframework.kafka: DEBUG
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      newrelic:
+        enabled: false

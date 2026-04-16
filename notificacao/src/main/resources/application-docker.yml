@@ -1,0 +1,49 @@
+spring:
+  application:
+    name: notificacao
+
+  data:
+    mongodb:
+      uri: mongodb://mongodb:27017/notificacao-db
+
+  cloud:
+    function:
+      definition: notificacoes
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:9092
+          auto-create-topics: true
+      bindings:
+        notificacoes-in-0:
+          destination: transacoes-aprovadas,transacoes-reprovadas
+          group: notificacao-group
+          consumer:
+            auto-offset-reset: earliest
+            enable-auto-commit: true
+
+server:
+  port: 8083
+
+logging:
+  level:
+    com.banking.notificacao: INFO
+    org.springframework.cloud.stream: INFO
+    org.apache.kafka: WARN
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+  health:
+    mongo:
+      enabled: false  # Se não usar MongoDB
+  metrics:
+    export:
+      newrelic:
+        enabled: false

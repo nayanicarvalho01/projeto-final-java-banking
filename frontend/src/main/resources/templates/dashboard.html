@@ -24,20 +24,17 @@
             <h2 class="saldo-valor">
                 R$ <span th:text="${#numbers.formatDecimal(saldo.saldoDebito, 1, 2)}">0,00</span>
             </h2>
+        </div>
+
+        <div class="credito-section">
             <div class="limite-info">
                 <span class="limite-icon">💳</span>
                 <span>R$ <span th:text="${#numbers.formatDecimal(saldo.limiteCredito, 1, 2)}">0,00</span></span>
             </div>
-        </div>
-
-        <div class="credito-section">
             <p class="credito-label">Limite disponível</p>
             <h3 class="credito-valor">
                 R$ <span th:text="${#numbers.formatDecimal(saldo.creditoDisponivel, 1, 2)}">0,00</span>
             </h3>
-            <div class="credito-utilizado">
-                <span>Utilizado: R$ <span th:text="${#numbers.formatDecimal(saldo.creditoUtilizado, 1, 2)}">0,00</span></span>
-            </div>
         </div>
     </div>
 

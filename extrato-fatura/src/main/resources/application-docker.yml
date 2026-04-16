@@ -1,0 +1,8 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://mongodb:27017/extrato-fatura-db
+camunda:
+  bpm:
+    client:
+      base-url: http://camunda:8080/engine-rest

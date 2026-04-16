@@ -18,8 +18,6 @@ import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
 
-import java.time.format.DateTimeFormatter;
-
 @Slf4j
 @Service
 public class PdfService {

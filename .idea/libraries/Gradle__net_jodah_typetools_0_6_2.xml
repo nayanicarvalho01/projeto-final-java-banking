@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: net.jodah:typetools:0.6.2" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="net.jodah" artifactId="typetools" version="0.6.2" baseVersion="0.6.2" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.jodah/typetools/0.6.2/d1e38fe8e668f228b0761d80a6c80c151ab6044a/typetools-0.6.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

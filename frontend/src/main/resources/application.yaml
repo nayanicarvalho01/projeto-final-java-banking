@@ -10,17 +10,31 @@ spring:
     prefix: classpath:/templates/
     suffix: .html
 
-# URLs dos microserviços
+# URLs dos microserviços (com variáveis de ambiente)
 services:
   notificacao:
-    url: http://localhost:8083
+    url: ${NOTIFICACAO_SERVICE_URL:http://localhost:8083}
   saldo:
-    url: http://localhost:8081
+    url: ${SALDO_SERVICE_URL:http://localhost:8081}
   transacao:
-    url: http://localhost:8082
+    url: ${TRANSACAO_SERVICE_URL:http://localhost:8082}
   extrato-fatura:
-    url: http://localhost:8084
+    url: ${EXTRATO_FATURA_SERVICE_URL:http://localhost:8084}
 
 logging:
   level:
     com.banking.frontend: DEBUG
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      newrelic:
+        enabled: false

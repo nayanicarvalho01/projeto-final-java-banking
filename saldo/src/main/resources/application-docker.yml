@@ -1,0 +1,49 @@
+spring:
+  application:
+    name: saldo
+
+  data:
+    mongodb:
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb://mongodb:27017/saldo-db}
+
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST:redis}
+      port: ${SPRING_DATA_REDIS_PORT:6379}
+      timeout: ${SPRING_DATA_REDIS_TIMEOUT:2000ms}
+
+server:
+  port: 8081
+
+camunda:
+  bpm:
+    client:
+      base-url: ${CAMUNDA_BPM_CLIENT_BASE_URL:http://camunda:8080/engine-rest}
+      worker-id: ${CAMUNDA_BPM_CLIENT_WORKER_ID:saldo-worker}
+      max-tasks: ${CAMUNDA_BPM_CLIENT_MAX_TASKS:10}
+      lock-duration: ${CAMUNDA_BPM_CLIENT_LOCK_DURATION:10000}
+
+  worker:
+    retry:
+      max: 3
+      delay: 1000
+    lock-duration: 20000
+
+logging:
+  level:
+    com.banking.saldo: ${LOGGING_LEVEL_COM_BANKING_SALDO:INFO}
+    org.springframework.data.redis: ${LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_DATA_REDIS:DEBUG}
+
+# Actuator para healthcheck
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
+  health:
+    redis:
+      enabled: true
+    mongo:
+      enabled: true
