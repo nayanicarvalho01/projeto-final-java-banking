@@ -35,3 +35,9 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# Build outputs
+build/
+.gradle/
+bin/
+out/

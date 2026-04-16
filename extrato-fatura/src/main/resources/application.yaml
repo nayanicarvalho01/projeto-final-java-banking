@@ -1,29 +1,43 @@
 spring:
   application:
     name: extrato-fatura
-
   data:
     mongodb:
-      uri: mongodb://localhost:27017/extrato-fatura-db
-
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb://mongodb:27017/extrato-fatura-db}
 server:
   port: 8084
-
 camunda:
   bpm:
     client:
-      base-url: http://localhost:8080/engine-rest
+      base-url: ${CAMUNDA_BPM_CLIENT_BASE_URL:http://camunda:8080/engine-rest}
       worker-id: extrato-fatura-worker
       max-tasks: 10
       async-response-timeout: 2000
-
+      lock-duration: 60000
   worker:
     retry:
       max: 3
       delay: 5000
     lock-duration: 60000
-
 logging:
   level:
     com.banking.extratofatura: INFO
-    org.camunda: DEBUG
+    org.camunda: INFO
+    com.itextpdf: WARN
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+  health:
+    mongo:
+      enabled: true
+  metrics:
+    export:
+      newrelic:
+        enabled: false
+pdf:
+  output-dir: /app/pdfs

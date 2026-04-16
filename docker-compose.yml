@@ -1,7 +1,274 @@
+version: '3.8'
+
 services:
+  # ==================== OBSERVABILIDADE ====================
+
+  newrelic-infra:
+    image: newrelic/infrastructure:latest
+    container_name: newrelic-infra
+    restart: unless-stopped
+    privileged: true
+    pid: host
+    environment:
+      NRIA_LICENSE_KEY: ${NEW_RELIC_LICENSE_KEY}
+      NRIA_DISPLAY_NAME: banking-infrastructure
+    volumes:
+      - /:/host:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - banking-network
+
+  # ==================== FRONTEND ====================
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      # Spring Boot
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_APPLICATION_NAME: frontend-service
+
+      # URLs dos Microserviços
+      NOTIFICACAO_SERVICE_URL: http://servico-notificacao:8083
+      SALDO_SERVICE_URL: http://servico-saldo:8081
+      TRANSACAO_SERVICE_URL: http://servico-transacao:8082
+      EXTRATO_FATURA_SERVICE_URL: http://servico-extrato:8084
+
+      # Logging
+      LOGGING_LEVEL_COM_BANKING_FRONTEND: INFO
+
+      # New Relic
+      NEW_RELIC_APP_NAME: frontend-service
+      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_LICENSE_KEY}
+      NEW_RELIC_DISTRIBUTED_TRACING_ENABLED: true
+      NEW_RELIC_LOG_FILE_NAME: STDOUT
+
+      # JVM Options
+      JAVA_OPTS: >-
+        -javaagent:/newrelic/newrelic.jar
+        -XX:+UseContainerSupport
+        -XX:MaxRAMPercentage=75.0
+    volumes:
+      - ./newrelic/newrelic.jar:/newrelic/newrelic.jar:ro
+      - ./newrelic/newrelic.yml:/newrelic/newrelic.yml:ro
+      - frontend-logs:/app/logs
+    depends_on:
+      servico-saldo:
+        condition: service_healthy
+      servico-transacao:
+        condition: service_healthy
+      servico-notificacao:
+        condition: service_healthy
+      servico-extrato:
+        condition: service_healthy
+    networks:
+      - banking-network
+    labels:
+      com.newrelic.service: "frontend-service"
+      com.newrelic.environment: "development"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8000/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # ==================== MICROSERVIÇOS ====================
+
+  servico-saldo:
+    build:
+      context: ./saldo
+      dockerfile: Dockerfile
+    container_name: servico-saldo
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/saldo-db
+      SPRING_DATA_REDIS_HOST: redis
+      CAMUNDA_BPM_CLIENT_BASE_URL: http://camunda:8080/engine-rest
+      NEW_RELIC_APP_NAME: servico-saldo
+      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_LICENSE_KEY}
+      JAVA_OPTS: >-
+        -javaagent:/newrelic/newrelic.jar
+        -XX:+UseContainerSupport
+        -XX:MaxRAMPercentage=75.0
+    volumes:
+      - ./newrelic/newrelic.jar:/newrelic/newrelic.jar:ro
+      - ./newrelic/newrelic.yml:/newrelic/newrelic.yml:ro
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      camunda:
+        condition: service_started
+    networks:
+      - banking-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8081/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  servico-transacao:
+    build:
+      context: ./transacao
+      dockerfile: Dockerfile
+    container_name: servico-transacao
+    restart: unless-stopped
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/transacao-db
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SALDO_SERVICE_URL: http://servico-saldo:8081
+      CAMUNDA_BPM_CLIENT_BASE_URL: http://camunda:8080/engine-rest
+      NEW_RELIC_APP_NAME: servico-transacao
+      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_LICENSE_KEY}
+      JAVA_OPTS: >-
+        -javaagent:/newrelic/newrelic.jar
+        -XX:+UseContainerSupport
+        -XX:MaxRAMPercentage=75.0
+    volumes:
+      - ./newrelic/newrelic.jar:/newrelic/newrelic.jar:ro
+      - ./newrelic/newrelic.yml:/newrelic/newrelic.yml:ro
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+      camunda:
+        condition: service_started
+      servico-saldo:
+        condition: service_healthy
+    networks:
+      - banking-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8082/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  servico-notificacao:
+    build:
+      context: ./notificacao
+      dockerfile: Dockerfile
+    container_name: servico-notificacao
+    restart: unless-stopped
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      NEW_RELIC_APP_NAME: servico-notificacao
+      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_LICENSE_KEY}
+      JAVA_OPTS: >-
+        -javaagent:/newrelic/newrelic.jar
+        -XX:+UseContainerSupport
+        -XX:MaxRAMPercentage=75.0
+    volumes:
+      - ./newrelic/newrelic.jar:/newrelic/newrelic.jar:ro
+      - ./newrelic/newrelic.yml:/newrelic/newrelic.yml:ro
+    depends_on:
+      kafka:
+        condition: service_started
+    networks:
+      - banking-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8083/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  servico-extrato:
+    build:
+      context: ./extrato-fatura
+      dockerfile: Dockerfile
+    container_name: servico-extrato
+    restart: unless-stopped
+    ports:
+      - "8084:8084"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/extrato-fatura-db
+      CAMUNDA_BPM_CLIENT_BASE_URL: http://camunda:8080/engine-rest
+      NEW_RELIC_APP_NAME: servico-extrato
+      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_LICENSE_KEY}
+      JAVA_OPTS: >-
+        -javaagent:/newrelic/newrelic.jar
+        -XX:+UseContainerSupport
+        -XX:MaxRAMPercentage=75.0
+    volumes:
+      - ./newrelic/newrelic.jar:/newrelic/newrelic.jar:ro
+      - ./newrelic/newrelic.yml:/newrelic/newrelic.yml:ro
+      - extrato-pdfs:/app/pdfs
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      camunda:
+        condition: service_started
+    networks:
+      - banking-network
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8084/actuator/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # ==================== INFRAESTRUTURA ====================
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: banking
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      - banking-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/banking --quiet
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    networks:
+      - banking-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
     container_name: zookeeper
+    restart: unless-stopped
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -13,6 +280,7 @@ services:
   kafka:
     image: confluentinc/cp-kafka:7.5.0
     container_name: kafka
+    restart: unless-stopped
     depends_on:
       - zookeeper
     ports:
@@ -20,7 +288,7 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
@@ -28,29 +296,19 @@ services:
     networks:
       - banking-network
 
-  mongodb:
-    image: mongo:latest
-    container_name: mongodb
+  camunda:
+    image: camunda/camunda-bpm-platform:latest
+    container_name: camunda
+    restart: unless-stopped
     ports:
-      - "27017:27017"
-    environment:
-      MONGO_INITDB_DATABASE: banking
-    volumes:
-      - mongodb-data:/data/db
-    networks:
-      - banking-network
-
-  redis:
-    image: redis:latest
-    container_name: redis
-    ports:
-      - "6379:6379"
+      - "8080:8080"
     networks:
       - banking-network
 
   redis-commander:
     image: rediscommander/redis-commander:latest
     container_name: redis-commander
+    restart: unless-stopped
     environment:
       REDIS_HOSTS: local:redis:6379
     ports:
@@ -61,17 +319,11 @@ services:
       - banking-network
 
   redis-insight:
-    container_name: redis-insight
     image: redis/redisinsight:latest
+    container_name: redis-insight
+    restart: unless-stopped
     ports:
-      - 5540:5540
-
-
-  camunda:
-    image: camunda/camunda-bpm-platform:latest
-    container_name: camunda
-    ports:
-      - "8080:8080"
+      - "5540:5540"
     networks:
       - banking-network
 
@@ -81,3 +333,6 @@ networks:
 
 volumes:
   mongodb-data:
+  redis-data:
+  extrato-pdfs:
+  frontend-logs:

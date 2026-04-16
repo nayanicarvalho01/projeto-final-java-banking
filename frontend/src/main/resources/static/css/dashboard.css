@@ -59,8 +59,8 @@ body {
 
 /* Saldo Card */
 .saldo-card {
-    background: linear-gradient(135deg, #2863fa 0%, #0451bd 100%);
-    margin: 30px 20px 20px;
+    background: linear-gradient(135deg, #00A868 0%, #00C87A 100%);
+    margin: -30px 20px 20px;
     padding: 25px;
     border-radius: 20px;
     color: white;
@@ -68,9 +68,7 @@ body {
 }
 
 .saldo-section {
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 30px;
 }
 
 .saldo-label {
@@ -80,9 +78,14 @@ body {
 }
 
 .saldo-valor {
-    font-size: 36px;
+    font-size: 48px;
     font-weight: 700;
-    margin-bottom: 10px;
+    margin-bottom: 0;
+}
+
+.credito-section {
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .limite-info {
@@ -91,14 +94,11 @@ body {
     gap: 8px;
     font-size: 14px;
     opacity: 0.9;
+    margin-bottom: 8px;
 }
 
 .limite-icon {
     font-size: 16px;
-}
-
-.credito-section {
-    padding-top: 10px;
 }
 
 .credito-label {
@@ -108,9 +108,9 @@ body {
 }
 
 .credito-valor {
-    font-size: 28px;
+    font-size: 32px;
     font-weight: 700;
-    margin-bottom: 8px;
+    margin-bottom: 0;
 }
 
 .credito-utilizado {

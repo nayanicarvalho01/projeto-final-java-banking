@@ -1,0 +1,101 @@
+# New Relic Java Agent Configuration File
+
+# Common settings that apply to all environments
+common: &default_settings
+
+  # License key (read from environment variable)
+  license_key: '<%= ENV["NEW_RELIC_LICENSE_KEY"] %>'
+
+  # Application name (read from environment variable)
+  app_name: '<%= ENV["NEW_RELIC_APP_NAME"] %>'
+
+  # Distributed tracing settings
+  distributed_tracing:
+    enabled: true
+
+  # Application logging settings
+  application_logging:
+    enabled: true
+    forwarding:
+      enabled: true
+      max_samples_stored: 10000
+    metrics:
+      enabled: true
+    local_decorating:
+      enabled: false
+
+  # Transaction tracer settings
+  transaction_tracer:
+    enabled: true
+    transaction_threshold: apdex_f
+    record_sql: obfuscated
+    stack_trace_threshold: 0.5
+    explain_enabled: true
+    explain_threshold: 0.5
+
+  # Error collector settings
+  error_collector:
+    enabled: true
+    ignore_errors: ""
+    ignore_status_codes: 404
+
+  # Thread profiler settings
+  thread_profiler:
+    enabled: true
+
+  # Browser monitoring (RUM)
+  browser_monitoring:
+    auto_instrument: true
+
+  # Labels for filtering and grouping
+  labels:
+    environment: development
+    team: banking
+    project: microservices
+
+  # Audit mode (for debugging)
+  audit_mode: false
+
+  # Log settings
+  log_level: info
+
+  # Proxy settings (if needed)
+  # proxy_host: proxy.example.com
+  # proxy_port: 8080
+  # proxy_user: username
+  # proxy_password: password
+
+# Production environment
+production:
+  <<: *default_settings
+  monitor_mode: true
+  log_level: info
+  audit_mode: false
+
+  labels:
+    environment: production
+
+# Development environment
+development:
+  <<: *default_settings
+  monitor_mode: true
+  log_level: info
+  audit_mode: false
+
+  labels:
+    environment: development
+
+# Staging environment
+staging:
+  <<: *default_settings
+  monitor_mode: true
+  log_level: info
+
+  labels:
+    environment: staging
+
+# Test environment
+test:
+  <<: *default_settings
+  monitor_mode: false
+  log_level: info

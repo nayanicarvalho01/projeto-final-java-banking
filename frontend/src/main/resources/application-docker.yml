@@ -1,0 +1,40 @@
+server:
+  port: 8000
+
+spring:
+  application:
+    name: frontend-service
+
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+
+# URLs dos microserviços (nomes de serviço Docker)
+services:
+  notificacao:
+    url: http://servico-notificacao:8083
+  saldo:
+    url: http://servico-saldo:8081
+  transacao:
+    url: http://servico-transacao:8082
+  extrato-fatura:
+    url: http://servico-extrato:8084
+
+logging:
+  level:
+    com.banking.frontend: INFO
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      newrelic:
+        enabled: false

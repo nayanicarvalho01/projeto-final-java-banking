@@ -1,26 +1,27 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '4.0.5'
-	id 'io.spring.dependency-management' version '1.1.7'
+    id 'java'
+    id 'org.springframework.boot' version '4.0.5'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'jacoco' // ✅ ADICIONADO
 }
 
 group = 'com.banking'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.camunda.bpm:camunda-external-task-client:7.20.0'
 
     implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
@@ -39,7 +40,50 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+// ✅ CONFIGURAÇÃO JACOCO
+jacoco {
+    toolVersion = "0.8.11"
+}
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
+
+tasks.named('jar') {
+    enabled = false
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    '**/config/**',
+                    '**/model/**',
+                    '**/enumerated/**',
+                    '**/worker/**', // Ignorando workers do Camunda por enquanto
+                    '**/TestPdfController.class', // Ignorando controller de teste
+                    '**/*Application.class'
+            ])
+        }))
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.65 // ✅ 65% REQUISITO DO PROJETO
+            }
+        }
+    }
+}
+
+check.dependsOn jacocoTestCoverageVerification
