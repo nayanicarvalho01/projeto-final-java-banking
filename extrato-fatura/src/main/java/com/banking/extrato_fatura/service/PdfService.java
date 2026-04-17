@@ -32,30 +32,25 @@ public class PdfService {
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
 
-            // Título
             document.add(new Paragraph("EXTRATO BANCÁRIO")
                     .setFontSize(20)
                     .setBold()
                     .setTextAlignment(TextAlignment.CENTER));
 
-            // Informações da conta
             document.add(new Paragraph("Conta: " + extrato.getContaId())
                     .setFontSize(12));
             document.add(new Paragraph("Período: " + extrato.getMesReferencia())
                     .setFontSize(12)
                     .setMarginBottom(20));
 
-            // Tabela de transações
             Table table = new Table(UnitValue.createPercentArray(new float[]{2, 3, 2, 2}))
                     .useAllAvailableWidth();
 
-            // Cabeçalho
             table.addHeaderCell("Data/Hora");
             table.addHeaderCell("Comerciante");
             table.addHeaderCell("Localização");
             table.addHeaderCell("Valor");
 
-            // Itens
             for (ItemExtrato item : extrato.getItens()) {
                 table.addCell(item.getDataHora().atZone(java.time.ZoneId.of("America/Sao_Paulo"))
                         .format(DATE_FORMATTER));
@@ -66,7 +61,6 @@ public class PdfService {
 
             document.add(table);
 
-            // Total
             BigDecimal total = extrato.getItens().stream()
                     .map(ItemExtrato::getValor)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -97,13 +91,11 @@ public class PdfService {
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
 
-            // Título
             document.add(new Paragraph("FATURA DO CARTÃO DE CRÉDITO")
                     .setFontSize(20)
                     .setBold()
                     .setTextAlignment(TextAlignment.CENTER));
 
-            // Informações da conta
             document.add(new Paragraph("Conta: " + fatura.getContaId())
                     .setFontSize(12));
             document.add(new Paragraph("Período: " + fatura.getMesReferencia())
@@ -114,17 +106,14 @@ public class PdfService {
                     .setFontSize(12)
                     .setMarginBottom(20));
 
-            // Tabela de transações
             Table table = new Table(UnitValue.createPercentArray(new float[]{2, 3, 2, 2}))
                     .useAllAvailableWidth();
 
-            // Cabeçalho
             table.addHeaderCell("Data/Hora");
             table.addHeaderCell("Comerciante");
             table.addHeaderCell("Localização");
             table.addHeaderCell("Valor");
 
-            // Itens
             for (ItemFatura item : fatura.getItens()) {
                 table.addCell(item.getDataHora().atZone(java.time.ZoneId.of("America/Sao_Paulo"))
                         .format(DATE_FORMATTER));
@@ -135,7 +124,6 @@ public class PdfService {
 
             document.add(table);
 
-            // Total
             document.add(new Paragraph("VALOR TOTAL DA FATURA: R$ " + fatura.getValorTotal())
                     .setFontSize(14)
                     .setBold()
