@@ -27,13 +27,11 @@ public class NotificacaoConsumer {
     public Consumer<String> notificacoes() {
         return mensagem -> {
             try {
-                log.info("📩 Mensagem recebida do Kafka");
+                log.info("Mensagem recebida do Kafka");
 
-                // Deserializar JSON
                 @SuppressWarnings("unchecked")
                 Map<String, Object> map = objectMapper.readValue(mensagem, Map.class);
 
-                // Construir NotificacaoEvent
                 NotificacaoEvent event = NotificacaoEvent.builder()
                         .transacaoId((String) map.get("transacaoId"))
                         .contaId((String) map.get("contaId"))
@@ -45,15 +43,15 @@ public class NotificacaoConsumer {
                         .dataHora(Instant.ofEpochSecond(((Number) map.get("dataHora")).longValue()))
                         .build();
 
-                log.info("📩 Evento recebido - Conta: {}, Status: {}, Tipo: {}",
+                log.info("Evento recebido - Conta: {}, Status: {}, Tipo: {}",
                         event.getContaId(), event.getStatus(), event.getTipo());
 
                 notificacaoService.processar(event);
 
-                log.info("✅ Notificação processada - Conta: {}", event.getContaId());
+                log.info("Notificação processada - Conta: {}", event.getContaId());
 
             } catch (Exception e) {
-                log.error("❌ Erro ao processar mensagem: {}", mensagem, e);
+                log.error("Erro ao processar mensagem: {}", mensagem, e);
             }
         };
     }
